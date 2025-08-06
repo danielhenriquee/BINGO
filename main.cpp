@@ -4,323 +4,317 @@
 #include <locale.h>
 #include <time.h>
 #include <unistd.h>
-
 using namespace std;
-
 #define TAM 5
 
+#ifdef _WIN32
+    #define CLEAR "cls"
+#else
+    #define CLEAR CLEAR
+#endif
+
 void delay(unsigned long t) {
-  sleep(t);
-} // Para controlar tempo de delay entre cada número sorteado, t em segundos
+    sleep(t);
+} // Controls delay time between each drawn number, t in seconds
 
-void voltarMenu(int &menu) {
-  menu = 0;
-  cout << "\nDigite qualquer tecla para voltar ao menu\n";
-  system("read 0 -p");
-  system("clear");
-} // Para voltar ao menu
+void returnToMenu(int &menu) {
+    menu = 0;
+    cout << "\nPress any key to return to the menu\n";
+    system("read 0 -p");
+    system(CLEAR);
+} // Returns to the main menu
 
-void imprimeMenu() {
-  cout << endl;
-  cout << "      :::::::::       :::::::::::       ::::    :::       ::::::::       :::::::: \n"
-          "     :+:    :+:          :+:           :+:+:   :+:      :+:    :+:     :+:    :+: \n"
-          "    +:+    +:+          +:+           :+:+:+  +:+      +:+            +:+    +:+  \n"
-          "   +#++:++#+           +#+           +#+ +:+ +#+      :#:            +#+    +:+   \n"
-          "  +#+    +#+          +#+           +#+  +#+#+#      +#+   +#+#     +#+    +#+    \n"
-          " #+#    #+#          #+#           #+#   #+#+#      #+#    #+#     #+#    #+#     \n"
-          "#########       ###########       ###    ####       ########       ########       \n\n\n";
+void printMenu() {
+    cout << endl;
+    cout << "██████  ██ ███    ██  ██████   ██████  ██\n"
+            "██   ██ ██ ████   ██ ██       ██    ██ ██\n"
+            "██████  ██ ██ ██  ██ ██   ███ ██    ██ ██\n"
+            "██   ██ ██ ██  ██ ██ ██    ██ ██    ██   \n"
+            "██████  ██ ██   ████  ██████   ██████  ██\n\n\n";
   
-  cout << "       1.┏┳┏┓┏┓┏┓┳┓\n"
-          "          ┃┃┃┃┓┣┫┣┫\n"
-          "         ┗┛┗┛┗┛┛┗┛┗\n\n\n";
-    
-  cout << "       2.┏┓┏┓┳┓┳┓┏┓\n"
-          "         ┗┓┃┃┣┫┣┫┣ \n"
-          "         ┗┛┗┛┻┛┛┗┗┛\n\n\n";
-    
-  cout << "       3.┏┓┏┓┳┳┓\n"
-          "         ┗┓┣┫┃┣┫\n"
-          "         ┗┛┛┗┻┛┗\n\n\n";
-} // Imprime a tela do menu
+    cout << "1.  PLAY\n\n\n"
+            "2.  ABOUT\n\n\n"
+            "3.  EXIT\n\n\n\n";
+} // Print main menu
 
-void sobre() {
-  cout << "\nDesenvolvedores:    Daniel Henrique da Silva\n"
-          "                    Lucas dos Santos Luckow\n"
-          "                    Samuel Alfonso Werner Stuhlert\n"
-          "                    Victor Menezes Ferreira\n\n"
-          "Professor:          Prof. Rafael Ballotin Martins\n"
-          "Matéria:            Algoritmos e Programação II\n"
-          "Agosto/2023\n\n";
-} // Exibe o "sobre"
+void about() {
+    cout << "\nDevelopers:    Daniel Henrique da Silva\n"
+            "               Lucas dos Santos Luckow\n"
+            "               Samuel Alfonso Werner Stuhlert\n"
+            "               Victor Menezes Ferreira\n\n"
+            "Professor:     Prof. Rafael Ballotin Martins\n"
+            "Course:        Algorithms and Programming II\n"
+            "August/2023\n\n";
+} // Print "about"
 
-void imprimir(int cartela[TAM][TAM], string jogadores[TAM], int p, int numeros[75]) {
-  cout << "0" << p << " - " << jogadores[p - 1] << endl; // Printa o número da cartela e seu dono
-  cout << "╔═══════════════╗\n"; // Printa essa borda antes do loop que printa a cartela
-  for (int i = 0; i < TAM; i++) {
-    for (int j = 0; j < TAM; j++) {
-      
-      if (j == 0) { // Printa a borda antes da primeira coluna
-        cout << "║";
-      }
-      
-      if (cartela[i][j] < 10 and j != 8) { // Se o valor for de um dígito, printa 0 antes e ' '
-        if (numeros[cartela[i][j] - 1] != 0) { // Verifica se o número já foi sorteado
-          cout << "\033[32m0" << cartela[i][j] << " \033[0m"; // Muda a cor para verde e depois para a padrão de volta
-        } else {
-          cout << "0" << cartela[i][j] << " ";
-        }
-        
-      } else if (cartela[i][j] > 0 and j == 8) { // Se o valor for de um dígito na última coluna, printa 0 sem ' '
-        if (numeros[cartela[i][j] - 1] != 0) {
-          cout << "\033[32m0" << cartela[i][j] << "\033[0m";
-        } else {
-          cout << "0" << cartela[i][j];
-        }
-        
-      } else if (cartela[i][j] != 0 and j < 8) { // Se o valor for de dois dígitos, printa o valor com ' '
-        if (numeros[cartela[i][j] - 1] != 0) {
-          cout << "\033[32m" << cartela[i][j] << " \033[0m";
-        } else {
-          cout << cartela[i][j] << " ";
-        }
-        
-      } else { // Printa o valor sem ' ' (última coluna)
-          if (numeros[cartela[i][j] - 1] != 0) {
-            cout << "\033[32m" << cartela[i][j] << "\033[0m";
-        } else {
-          cout << cartela[i][j];
-        }
-      }
-    }
-    cout << "║ " << endl; // Após cada fim da linha, printa ║ como borda e pula a linha
-  }
-  cout << "╚═══════════════╝\n\n"; // Após o loop que printa a cartela, printa  essa linha no final
-} // Imprime as cartelas
-
-void gerar(int cartela[TAM][TAM]) {
-  int nmr = 0;
-  for (int i = 0; i < TAM; i++) {
-    for (int j = 0; j < TAM; j++) {
-      cartela[i][j] = rand() % 15 + 1 + nmr; // 15+1 faz com que gere valores de 1 a 15, nmr começa em 0
-    }
-    nmr += 15; // Após o loop do 'j', antes de i++, soma 15 ao nmr, pois os valores min e max da prox linha são 15 a mais da anterior
-  }
-} // Gera cartela aleatória
-
-void verificar(int cartela[TAM][TAM]) {
-  int nmr = 0;
-  for (int i = 0; i < TAM; i++) {
-    for (int verifica = 0; verifica < 2; verifica++) { // Para reverificar depois de alterar o número, caso altere para outro número repetido
-      for (int k = 0; k < TAM; k++) {
-        for (int j = 0; j < TAM; j++) {
-          if (k != j) {
-            if (cartela[i][k] == cartela[i][j]) { // Passa por todas as colunas para ver se o valor se repete
-              cartela[i][k] = rand() % 15 + 1 + nmr; // Caso haja um número repetido, substitui-o
+void print(int card[SIZE][SIZE], string players[SIZE], int p, int numbers[75]) {
+    cout << "0" << p << " - " << players[p - 1] << endl; // Printa o número da card e seu dono
+    cout << "╔═══════════════╗\n"; // Print this edge before the loop that prints the card
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (j == 0) { // Print this edge before first column
+                cout << "║";
             }
-          }
-        }
-      }
-    }
-    nmr += 15;
-  }
-} // Verifica se há números repetidos na cartela
-
-void bubblesort(int cartela[TAM][TAM]) {
-  int i, j, cond, temp, linha;
-  for (linha = 0; linha < TAM; linha++) { // Adicionado um 'for' para que passe por todas as linhas da matriz, ordenando-a por completo
-    cond = 1;
-    for (i = TAM - 1; (i >= 1) && (cond == 1); i--) {
-      cond = 0;
-      for (j = 0; j < i; j++) {
-        if (cartela[linha][j + 1] < cartela[linha][j]) {
-          temp = cartela[linha][j];
-          cartela[linha][j] = cartela[linha][j + 1];
-          cartela[linha][j + 1] = temp;
-          cond = 1;
-        }
-      }
-    }
-  }
-} // Bubblesort com ajuste para ordenar todas as linhas da matriz
-
-void nomes(string jogadores[TAM]) {
-  cin.ignore(); // limpa o buffer de entrada
-  for (int i = 0; i < TAM; i++) {
-    cout << endl << "Digite o nome do dono da cartela 0" << i + 1 << ": ";
-    getline(cin, jogadores[i]);
-  }
-} // Recebe o nome dos jogadores
-
-void sorteio(int numeros[75], int &nmr) {
-  int i = 0; // Define i=0 para que possa inicar o loop
-  while (i != 1) {
-    nmr = rand() % 75 + 1;       // Sorteia um número de 1 a 75
-    if (numeros[nmr - 1] == 0) { // Verifica se o número já foi sorteado antes
-      numeros[nmr - 1] = nmr; // Se não foi sorteado antes, adiciona o número ao vetor
-      i = 1;   // i=1 para que o loop não se repita
-    } else {
-      i = 0; // Se já foi sorteado, i=0 faz com que o loop continue
-    }
-  }
-} // Sorteia um número
-
-void sorteados(int numeros[75], int nmr) {
-  system("clear");
-  cout << endl << "Números sorteados: " << endl;
-  for (int i = 0; i < 75; i++) {
-    if (numeros[i] != 0) {
-      cout << "\033[32m" << numeros[i] << "\033[0m" << "\t";
-    }
-  }
-  cout << endl << "Último número sorteado: " << "\033[31m" << nmr << "\033[0m" << endl << endl;
-} // Exibe os números sorteados
-
-int ganhou(int cartela1[TAM][TAM], int cartela2[TAM][TAM], int cartela3[TAM][TAM], int cartela4[TAM][TAM], int cartela5[TAM][TAM], int numeros[75]) {
-  int ganhador1 = 0, ganhador2 = 0, ganhador3 = 0, ganhador4 = 0, ganhador5 = 0; // zera os contadores
-  for (int i = 0; i < TAM; i++) {
-    for (int j = 0; j < TAM; j++) {
-      if (cartela1[i][j] == numeros[cartela1[i][j] - 1]) { // verifica se o número da cartela já foi sorteado
-        ganhador1++; // se sim, adiciona 1 ao contador
-        if (ganhador1 == 25)
-          return (ganhador1);
-      }
-      if (cartela2[i][j] == numeros[cartela2[i][j] - 1]) {
-        ganhador2++;
-        if (ganhador2 == 25)
-          return (ganhador2);
-      }
-      if (cartela3[i][j] == numeros[cartela3[i][j] - 1]) {
-        ganhador3++;
-        if (ganhador3 == 25)
-          return (ganhador3);
-      }
-      if (cartela4[i][j] == numeros[cartela4[i][j] - 1]) {
-        ganhador4++;
-        if (ganhador4 == 25)
-          return (ganhador4);
-      }
-      if (cartela5[i][j] == numeros[cartela5[i][j] - 1]) {
-        ganhador5++;
-        if (ganhador5 == 25)
-          return (ganhador5);
-      }
-    }
-  }
-  return 0;
-} // Verifica se algum jogador ganhou
-
-void telaGanhou(int cartela1[TAM][TAM], int cartela2[TAM][TAM], int cartela3[TAM][TAM], int cartela4[TAM][TAM], int cartela5[TAM][TAM], int numeros[75], string jogadores[TAM]) {
-  cout<< "██████  ██ ███    ██  ██████   ██████  ██ \n"
-         "██   ██ ██ ████   ██ ██       ██    ██ ██ \n"
-         "██████  ██ ██ ██  ██ ██   ███ ██    ██ ██ \n"
-         "██   ██ ██ ██  ██ ██ ██    ██ ██    ██    \n"
-         "██████  ██ ██   ████  ██████   ██████  ██ \n\n\n";
-                                                   
-  int ganhador1 = 0, ganhador2 = 0, ganhador3 = 0, ganhador4 = 0, ganhador5 = 0;
-  for (int i = 0; i < TAM; i++) {
-    for (int j = 0; j < TAM; j++) {
-      if (cartela1[i][j] == numeros[cartela1[i][j] - 1]) {
-        ganhador1++;
-        if (ganhador1 == 25)
-          cout << "Parabéns " << jogadores[0] << " da cartela 01, você ganhou!\n";
-      }
-      if (cartela2[i][j] == numeros[cartela2[i][j] - 1]) {
-        ganhador2++;
-        if (ganhador2 == 25)
-          cout << "Parabéns " << jogadores[1] << " da cartela 02, você ganhou!\n";
-      }
-      if (cartela3[i][j] == numeros[cartela3[i][j] - 1]) {
-        ganhador3++;
-        if (ganhador3 == 25)
-          cout << "Parabéns " << jogadores[2] << " da cartela 03, você ganhou!\n";
-      }
-      if (cartela4[i][j] == numeros[cartela4[i][j] - 1]) {
-        ganhador4++;
-        if (ganhador4 == 25)
-          cout << "Parabéns " << jogadores[3] << " da cartela 04, você ganhou!\n";
-      }
-      if (cartela5[i][j] == numeros[cartela5[i][j] - 1]) {
-        ganhador5++;
-        if (ganhador5 == 25)
-          cout << "Parabéns " << jogadores[4] << " da cartela 05, você ganhou!\n";
-      }
-    }
-  }
-  cout << endl << endl;
-} // Imprime na tela o(s) jogador(es) vencedor(es)
-
-int main() {
-  setlocale(LC_ALL, "Portuguese");
-  srand(time(NULL));
-  int menu;
-
-  do {
-    string(jogadores[TAM]);
-    int numeros[75] = {0}, nmr;
-    
-    imprimeMenu();
-    cin >> menu;
-
-    switch (menu) {
-    case 1: // Jogar
-
-      system("clear");
-
-      int cartela01[TAM][TAM];
-      int cartela02[TAM][TAM];
-      int cartela03[TAM][TAM];
-      int cartela04[TAM][TAM];
-      int cartela05[TAM][TAM];
-
-      gerar(cartela01);
-      verificar(cartela01);
-      bubblesort(cartela01);
-
-      gerar(cartela02);
-      verificar(cartela02);
-      bubblesort(cartela02);
-
-      gerar(cartela03);
-      verificar(cartela03);
-      bubblesort(cartela03);
-
-      gerar(cartela04);
-      verificar(cartela04);
-      bubblesort(cartela04);
-
-      gerar(cartela05);
-      verificar(cartela05);
-      bubblesort(cartela05);
-
-      nomes(jogadores);
-
-      do {
-        sorteio(numeros, nmr);
-        sorteados(numeros, nmr);
-        imprimir(cartela01, jogadores, 1, numeros);
-        imprimir(cartela02, jogadores, 2, numeros);
-        imprimir(cartela03, jogadores, 3, numeros);
-        imprimir(cartela04, jogadores, 4, numeros);
-        imprimir(cartela05, jogadores, 5, numeros);
-        delay (1);
-      } while (ganhou(cartela01, cartela02, cartela03, cartela04, cartela05, numeros) != 25);
-      delay (3);
-      telaGanhou(cartela01, cartela02, cartela03, cartela04, cartela05, numeros, jogadores);
       
-      voltarMenu(menu);
-      break;
+            if (card[i][j] < 10 and j != 8) { // If the value is a single digit, print 0 before and add space
+                if (numbers[card[i][j] - 1] != 0) { // Check if the number has already been drawn
+                    cout << "\033[32m0" << card[i][j] << " \033[0m"; // Change color to green then reset
+                } else {
+                    cout << "0" << card[i][j] << " ";
+                }
+              
+            } else if (card[i][j] > 0 and j == 8) { // If it's a single digit in the last column, print 0 without space
+                if (numbers[card[i][j] - 1] != 0) {
+                    cout << "\033[32m0" << card[i][j] << "\033[0m";
+                } else {
+                    cout << "0" << card[i][j];
+                }
+              
+            } else if (card[i][j] != 0 and j < 8) { // If the value has two digits, print with space
+                if (numbers[card[i][j] - 1] != 0) {
+                    cout << "\033[32m" << card[i][j] << " \033[0m";
+                } else {
+                    cout << card[i][j] << " ";
+                }
+              
+            } else { // Print value without space (last column)
+                if (numbers[card[i][j] - 1] != 0) {
+                    cout << "\033[32m" << card[i][j] << "\033[0m";
+                } else {
+                    cout << card[i][j];
+                }
+            }
+        }      
+        cout << "║ " << endl; // After each row, print border and newline
+    }    
+    cout << "╚═══════════════╝\n\n"; //After the card is printed, print this bottom border
+} // // Prints the cards
 
-    case 2: // Sobre
-      system("clear");
-      sobre();
-      voltarMenu(menu);
-      break;
+void generate(int card[SIZE][SIZE]) {
+    int num = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            card[i][j] = rand() % 15 + 1 + num; // 15+1 generate values from 1 to 15, num starts at 0
+        }
+        num += 15; // After the 'j' loop, before i++, add 15 to num, since the min and max values of the next line are 15 more than the previous one
+    }
+} // Generate random card
 
-    case 3: // Sair
-      break;
-    } // Fecha o switch
+void check(int card[SIZE][SIZE]) {
+    int num = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int verify  = 0; verify  < 2; verify ++) { // Re-check after changing a number, in case it's still a duplicate
+            for (int k = 0; k < SIZE; k++) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (k != j) {
+                        if (card[i][k] == card[i][j]) { // Checks all columns to see if the value is repeated
+                            card[i][k] = rand() % 15 + 1 + num; // If a duplicate is found, replace it with a new number
+                        }
+                    }
+                }
+            }
+        }
+        num += 15; // Increases the range offset for the next column
+    }
+} // Checks if there are repeated numbers in the card and replaces them
 
-    system("clear");   // Limpa tudo antes de voltar ao menu
-  } while (menu != 3); // Fecha o loop do jogo
-  return 0;
+void bubblesort(int card[SIZE][SIZE]) {
+    int i, j, cond, temp, row;
+    for (row = 0; row < SIZE; row++) { // Loop to go through all rows of the matrix, sorting each one
+        cond = 1;
+        for (i = SIZE - 1; (i >= 1) && (cond == 1); i--) {
+            cond = 0;
+            for (j = 0; j < i; j++) {
+                if (card[row][j + 1] < card[row][j]) {
+                    temp = card[row][j];
+                    card[row][j] = card[row][j + 1];
+                    card[row][j + 1] = temp;
+                    cond = 1;
+                }
+            }
+        }
+    }
+} // Bubble sort adjusted to sort each row of the matrix
+
+void names(string players[SIZE]) {
+    cin.ignore();
+    for (int i = 0; i < SIZE; i++) {
+        cout << endl << "Type player's name of card 0" << i + 1 << ": ";
+        getline(cin, players[i]);
+    }
+} // Get players names
+
+void draw(int numbers[75], int &num) {
+    int i = 0; // Set i=0 to start the loop
+    while (i != 1) {
+        num = rand() % 75 + 1;       // Draw a number from 1 to 75
+        if (numbers[num - 1] == 0) { // Check if the number was already drawn
+            numbers[num - 1] = num;  // If not, store the number in the array
+            i = 1; // Set i=1 to exit the loop
+        } else {
+            i = 0; // If already drawn, continue looping
+        }
+    }
+} // Draw a number
+
+void drawn(int numbers[75], int num) {
+    system(CLEAR);
+    cout << endl << "Drawn numbers: " << endl;
+    for (int i = 0; i < 75; i++) {
+        if (numbers[i] != 0) {
+            cout << "\033[32m" << numbers[i] << "\033[0m" << "\t";
+        }
+    }
+    cout << endl << "Last drawn number: " << "\033[31m" << num << "\033[0m" << endl << endl;
+} // Print drawn numbers
+
+int won(int card1[SIZE][SIZE], int card2[SIZE][SIZE], int card3[SIZE][SIZE], int card4[SIZE][SIZE], int card5[SIZE][SIZE], int numbers[75]) {
+    int winner1 = 0, winner2 = 0, winner3 = 0, winner4 = 0, winner5 = 0; // Reset counters
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (card1[i][j] == numbers[card1[i][j] - 1]) { // Check if number was already drawn
+                winner1++; // If true, add 1 to counter
+                if (winner1 == 25)
+                    return (winner1);
+            }
+            if (card2[i][j] == numbers[card2[i][j] - 1]) {
+                winner2++;
+                if (winner2 == 25)
+                    return (winner2);
+            }
+            if (card3[i][j] == numbers[card3[i][j] - 1]) {
+                winner3++;
+                if (winner3 == 25)
+                    return (winner3);
+            }
+            if (card4[i][j] == numbers[card4[i][j] - 1]) {
+                winner4++;
+                if (winner4 == 25)
+                    return (winner4);
+            }
+            if (card5[i][j] == numbers[card5[i][j] - 1]) {
+                winner5++;
+                if (winner5 == 25)
+                    return (winner5);
+            }
+        }
+    }
+    return 0;
+} // Check if a player already won
+
+void winnerScreen(int card1[SIZE][SIZE], int card2[SIZE][SIZE], int card3[SIZE][SIZE], int card4[SIZE][SIZE], int card5[SIZE][SIZE], int numbers[75], string players[SIZE]) {
+    cout << "██████  ██ ███    ██  ██████   ██████  ██\n"
+            "██   ██ ██ ████   ██ ██       ██    ██ ██\n"
+            "██████  ██ ██ ██  ██ ██   ███ ██    ██ ██\n"
+            "██   ██ ██ ██  ██ ██ ██    ██ ██    ██   \n"
+            "██████  ██ ██   ████  ██████   ██████  ██\n\n\n";
+                                                   
+    int winner1 = 0, winner2 = 0, winner3 = 0, winner4 = 0, winner5 = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (card1[i][j] == numbers[card1[i][j] - 1]) {
+                winner1++;
+                if (winner1 == 25)
+                    cout << "Congratulations " << players[0] << " of card 01, you won!\n";
+            }
+            if (card2[i][j] == numbers[card2[i][j] - 1]) {
+                winner2++;
+                if (winner2 == 25)
+                    cout << "Congratulations " << players[1] << " of card 02, you won!\n";
+            }
+            if (card3[i][j] == numbers[card3[i][j] - 1]) {
+                winner3++;
+                if (winner3 == 25)
+                    cout << "Congratulations " << players[2] << " of card 03, you won!\n";
+            }
+            if (card4[i][j] == numbers[card4[i][j] - 1]) {
+                winner4++;
+                if (winner4 == 25)
+                    cout << "Congratulations " << players[3] << " of card 04, you won!\n";
+            }
+            if (card5[i][j] == numbers[card5[i][j] - 1]) {
+                winner5++;
+                if (winner5 == 25)
+                    cout << "Congratulations " << players[4] << " of card 05, you won!\n";
+            }
+        }
+    }
+    cout << endl << endl;
+} // Print winner(s) player(s)
+  
+int main() {
+    #ifdef _WIN32
+        system("chcp 65001 > nul"); // To support accents in Windows terminal
+    #endif
+    setlocale(LC_ALL, "pt_BR.UTF-8");
+    srand(time(NULL));
+    int menu;
+
+    do {
+        string(players[SIZE]);
+        int numbers[75] = {0}, num;
+        
+        printMenu();
+        cin >> menu;
+  
+        switch (menu) {
+        case 1: // Play
+            system(CLEAR);
+      
+            int card01[SIZE][SIZE];
+            int card02[SIZE][SIZE];
+            int card03[SIZE][SIZE];
+            int card04[SIZE][SIZE];
+            int card05[SIZE][SIZE];
+      
+            generate(card01);
+            check(card01);
+            bubblesort(card01);
+      
+            generate(card02);
+            check(card02);
+            bubblesort(card02);
+      
+            generate(card03);
+            check(card03);
+            bubblesort(card03);
+      
+            generate(card04);
+            check(card04);
+            bubblesort(card04);
+      
+            generate(card05);
+            check(card05);
+            bubblesort(card05);
+      
+            names(players);
+      
+            do {
+                draw(numbers, num);
+                drawn(numbers, num);
+                print(card01, players, 1, numbers);
+                print(card02, players, 2, numbers);
+                print(card03, players, 3, numbers);
+                print(card04, players, 4, numbers);
+                print(card05, players, 5, numbers);
+                delay (1);
+            } while (won(card01, card02, card03, card04, card05, numbers) != 25);
+            delay (3);
+            winnerScreen(card01, card02, card03, card04, card05, numbers, players);
+            returnToMenu(menu);
+            break;
+    
+        case 2: // About
+            system(CLEAR);
+            about();
+            returnToMenu(menu);
+            break;
+    
+        case 3: // Exit
+            break;
+        }
+      
+        system(CLEAR);
+    } while (menu != 3);
+    return 0;
 }
