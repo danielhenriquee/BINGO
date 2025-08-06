@@ -10,7 +10,7 @@ using namespace std;
 #ifdef _WIN32
     #define CLEAR "cls"
 #else
-    #define CLEAR CLEAR
+    #define CLEAR "clear"
 #endif
 
 void delay(unsigned long t) {
@@ -20,7 +20,8 @@ void delay(unsigned long t) {
 void returnToMenu(int &menu) {
     menu = 0;
     cout << "\nPress any key to return to the menu\n";
-    system("read 0 -p");
+    cin.ignore();
+    cin.get();
     system(CLEAR);
 } // Returns to the main menu
 
@@ -48,7 +49,7 @@ void about() {
 } // Print "about"
 
 void print(int card[SIZE][SIZE], string players[SIZE], int p, int numbers[75]) {
-    cout << "0" << p << " - " << players[p - 1] << endl; // Printa o número da card e seu dono
+    cout << "0" << p << " - " << players[p - 1] << endl; // Print card number and its owner
     cout << "╔═══════════════╗\n"; // Print this edge before the loop that prints the card
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
