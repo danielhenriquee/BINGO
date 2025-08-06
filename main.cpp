@@ -33,8 +33,8 @@ void printMenu() {
             "██   ██ ██ ██  ██ ██ ██    ██ ██    ██   \n"
             "██████  ██ ██   ████  ██████   ██████  ██\n\n\n";
   
-    cout << "1.  PLAY\n\n\n"
-            "2.  ABOUT\n\n\n"
+    cout << "1.  PLAY\n\n"
+            "2.  ABOUT\n\n"
             "3.  EXIT\n\n\n\n";
 } // Print main menu
 
