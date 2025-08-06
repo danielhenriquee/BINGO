@@ -5,7 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 using namespace std;
-#define TAM 5
+#define SIZE 5
 
 #ifdef _WIN32
     #define CLEAR "cls"
