@@ -169,39 +169,23 @@ void drawn(int numbers[75], int num) {
     cout << endl << "Last drawn number: " << "\033[31m" << num << "\033[0m" << endl << endl;
 } // Print drawn numbers
 
+int countMarked(int card[SIZE][SIZE], int numbers[75]) {
+    int count = 0;
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            if (numbers[card[i][j] - 1] == card[i][j])
+                count++;
+    return count;
+} // Count how many numbers were marked in a card
+
 int won(int card1[SIZE][SIZE], int card2[SIZE][SIZE], int card3[SIZE][SIZE], int card4[SIZE][SIZE], int card5[SIZE][SIZE], int numbers[75]) {
-    int winner1 = 0, winner2 = 0, winner3 = 0, winner4 = 0, winner5 = 0; // Reset counters
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            if (card1[i][j] == numbers[card1[i][j] - 1]) { // Check if number was already drawn
-                winner1++; // If true, add 1 to counter
-                if (winner1 == 25)
-                    return (winner1);
-            }
-            if (card2[i][j] == numbers[card2[i][j] - 1]) {
-                winner2++;
-                if (winner2 == 25)
-                    return (winner2);
-            }
-            if (card3[i][j] == numbers[card3[i][j] - 1]) {
-                winner3++;
-                if (winner3 == 25)
-                    return (winner3);
-            }
-            if (card4[i][j] == numbers[card4[i][j] - 1]) {
-                winner4++;
-                if (winner4 == 25)
-                    return (winner4);
-            }
-            if (card5[i][j] == numbers[card5[i][j] - 1]) {
-                winner5++;
-                if (winner5 == 25)
-                    return (winner5);
-            }
-        }
-    }
+    if (countMarked(card1, numbers) == 25) return 25;
+    if (countMarked(card2, numbers) == 25) return 25;
+    if (countMarked(card3, numbers) == 25) return 25;
+    if (countMarked(card4, numbers) == 25) return 25;
+    if (countMarked(card5, numbers) == 25) return 25;
     return 0;
-} // Check if a player already won
+} // Check if a player already won // Check if a player already won
 
 void winnerScreen(int card1[SIZE][SIZE], int card2[SIZE][SIZE], int card3[SIZE][SIZE], int card4[SIZE][SIZE], int card5[SIZE][SIZE], int numbers[75], string players[SIZE]) {
     cout << "██████  ██ ███    ██  ██████   ██████  ██\n"
@@ -250,7 +234,7 @@ int main() {
     setlocale(LC_ALL, "pt_BR.UTF-8");
     srand(time(NULL));
     int menu;
-
+    string(players[SIZE]);
     do {
         string(players[SIZE]);
         int numbers[75] = {0}, num;
